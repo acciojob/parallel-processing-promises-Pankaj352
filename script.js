@@ -3,6 +3,7 @@ const output = document.getElementById("output");
 const loading = document.createElement("div");
 loading.id = "loading";
 loading.innerText = "Loading...";
+loading.style.display = "none"; // Hide initially
 document.body.appendChild(loading);
 
 const errorDiv = document.createElement("div");
@@ -25,12 +26,13 @@ function downloadImage(url) {
 }
 
 function downloadImages() {
-  loading.style.display = "block";
-  errorDiv.innerText = "";
+  // Clear previous images and errors
   output.innerHTML = "";
-  
+  errorDiv.innerText = "";
+  loading.style.display = "block"; // Show loading spinner
+
   const imagePromises = images.map(image => downloadImage(image.url));
-  
+
   Promise.all(imagePromises)
     .then(imgElements => {
       imgElements.forEach(img => output.appendChild(img));
@@ -39,9 +41,11 @@ function downloadImages() {
       errorDiv.innerText = error;
     })
     .finally(() => {
-      loading.style.display = "none";
+      loading.style.display = "none"; // Hide loading spinner
     });
 }
 
-downloadImages();
+// Attach event listener to button
+document.getElementById("download-images-button").addEventListener("click", downloadImages);
+
 
